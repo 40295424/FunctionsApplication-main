@@ -5,17 +5,18 @@
 
   <script type="text/javascript">
 
-    let maxminURL ="http://maxmin.esha.qpc.hal.davecutting.uk/";
-    let sortedModulesURL ="http://sort.esha.qpc.hal.davecutting.uk/";
-    let totalModulesURL ="http://localhost:8080/total";
-    let AverageModulesURL ="http://localhost:8080/Average";
-    let ClassifyModulesURL ="http://localhost:8080/Classification";
-    let AlphabeticSortModulesURL ="http://localhost:8080/AlphabeticalOrder";
+    let maxminURL ="http://localhost:9100/minmax";
+    let sortedModulesURL ="http://localhost:9100/sort";
+    let totalModulesURL ="http://localhost:9100/total";
+    let AverageModulesURL ="http://localhost:9100/Average";
+    let ClassifyModulesURL ="http://localhost:9100/Classification";
+    let AlphabeticSortModulesURL ="http://localhost:9100/AlphabeticalOrder";
+    let retrieveUrl = "http://localhost:9100/retrieve";
 
-    function displayMaxMin(max_module,min_module)
+
+    function displayMaxMin(response)
     {
-      document.getElementById('output-text').value = 'Highest scoring module = ' + max_module
-              + '\nLowest scoring module = ' + min_module;
+      document.getElementById('output-text').value = response;
 
     }
     function displaySortedModules(sorted_modules)
@@ -58,10 +59,12 @@
       let xhttp = new XMLHttpRequest();
       xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-          var j = JSON.parse(this.response);
-          let max_module = j.max_module;
-          let min_module = j.min_module;
-          displayMaxMin(max_module,min_module);
+          displayMaxMin(this.response);
+        }
+        if (this.readyState == 4 && this.status == 500) {
+          let sorted = JSON.parse(this.response);
+          let data = JSON.stringify(sorted);
+          displayMaxMin(data);
         }
       };
       xhttp.open("GET",maxminURL+"?module_1=" + module_1 + "&mark_1=" + mark_1 + "&module_2=" + module_2 + "&mark_2=" + mark_2
@@ -88,13 +91,12 @@
       let xhttp = new XMLHttpRequest();
       xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-          let j = JSON.parse(this.response);
-          let sorted_modules_returned = j.sorted_modules;
-          let sorted_modules = '';
-          for (let i = 0; i < sorted_modules_returned.length; i++) {
-            sorted_modules += sorted_modules_returned[i]['module'] + ' - ' + sorted_modules_returned[i]['marks'] + '\r\n';
-          }
-          displaySortedModules(sorted_modules);
+          displaySortedModules(this.response);
+        }
+        if (this.readyState == 4 && this.status == 500) {
+          let sorted = JSON.parse(this.response);
+          let data = JSON.stringify(sorted);
+          displaySortedModules(data);
         }
       };
       xhttp.open("GET",sortedModulesURL+"?module_1=" + module_1 + "&mark_1=" + mark_1 + "&module_2=" + module_2 + "&mark_2=" + mark_2
@@ -104,9 +106,9 @@
       return;
     }
 
-    function displayTotal(total)
+    function displayTotal(result)
     {
-      document.getElementById('output-text').value = 'Total marks = ' + total;
+      document.getElementById('output-text').value = result;
 
     }
 
@@ -129,8 +131,12 @@
 
       xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
+          displayTotal(this.response)
+        }
+        if (this.readyState == 4 && this.status == 500) {
           let total = JSON.parse(this.response);
-          displayTotal(total)
+          let data = JSON.stringify(total);
+          displayTotal(data);
         }
       };
       xhttp.open("GET",totalModulesURL+"?module_1=" + module_1 + "&mark_1=" + mark_1 + "&module_2=" + module_2 + "&mark_2=" + mark_2
@@ -140,8 +146,8 @@
       return;
     }
 
-    function displayClassification(classification) {
-      document.getElementById('output-text').value = 'Classification = ' + classification;
+    function displayClassification(result) {
+      document.getElementById('output-text').value = result;
     }
 
     function getClassification()
@@ -166,6 +172,11 @@
           let classification = this.response;
           displayClassification(classification)
         }
+        if (this.readyState == 4 && this.status == 500) {
+          let classification = JSON.parse(this.response);
+          let data = JSON.stringify(classification);
+          displayClassification(data);
+        }
       };
       xhttp.open("GET",ClassifyModulesURL+"?module_1=" + module_1 + "&mark_1=" + mark_1 + "&module_2=" + module_2 + "&mark_2=" + mark_2
               + "&module_3=" + module_3 + "&mark_3=" + mark_3 + "&module_4=" + module_4 + "&mark_4=" + mark_4
@@ -174,8 +185,8 @@
       return;
     }
 
-    function displayAverage(Average) {
-      document.getElementById('output-text').value = 'Average = ' + Average;
+    function displayAverage(response) {
+      document.getElementById('output-text').value = response;
     }
     function getAverage()
     {
@@ -196,10 +207,13 @@
 
       xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-          let Average = JSON.parse(this.response);
-          displayAverage(Average);
+          displayAverage(this.response);
         }
-
+        if (this.readyState == 4 && this.status == 500) {
+          let average = JSON.parse(this.response);
+          let data = JSON.stringify(average);
+          displayAverage(data);
+        }
       };
       xhttp.open("GET",AverageModulesURL+"?module_1=" + module_1 + "&mark_1=" + mark_1 + "&module_2=" + module_2 + "&mark_2=" + mark_2
               + "&module_3=" + module_3 + "&mark_3=" + mark_3 + "&module_4=" + module_4 + "&mark_4=" + mark_4
@@ -207,8 +221,8 @@
       xhttp.send();
       return;
     }
-    function displayAlphabeticalSort (AlphabeticalSort) {
-      document.getElementById('output-text').value = 'Alphabetically Sorted = ' + AlphabeticalSort;
+    function displayAlphabeticalSort (result) {
+      document.getElementById('output-text').value = result;
 
     }
     function getAlphabeticSortModules()
@@ -230,13 +244,39 @@
 
       xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-          let AlphabeticalSort = JSON.parse(this.response);
-          displayAlphabeticalSort(AlphabeticalSort);
+          displayAlphabeticalSort(this.response);
+        }
+        if (this.readyState == 4 && this.status == 500) {
+          let alphabeticalorder = JSON.parse(this.response);
+          let data = JSON.stringify(alphabeticalorder);
+          displayAlphabeticalSort(data);
         }
       };
       xhttp.open("GET",AlphabeticSortModulesURL+"?module_1=" + module_1 + "&mark_1=" + mark_1 + "&module_2=" + module_2 + "&mark_2=" + mark_2
               + "&module_3=" + module_3 + "&mark_3=" + mark_3 + "&module_4=" + module_4 + "&mark_4=" + mark_4
               + "&module_5=" + module_5 + "&mark_5=" + mark_5);
+      xhttp.send();
+      return;
+    }
+
+    function displayRetrievedResults (result) {
+      document.getElementById('output-text').value = result;
+
+    }
+    function retrieveOperation() {
+      let operationId = document.getElementById('retrieve').value
+      let xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          displayRetrievedResults(this.response);
+        }
+        if (this.readyState == 4 && this.status == 500) {
+          let alphabeticalorder = JSON.parse(this.response);
+          let data = JSON.stringify(alphabeticalorder);
+          displayRetrievedResults(data);
+        }
+      };
+      xhttp.open("GET",retrieveUrl+"?id=" + operationId);
       xhttp.send();
       return;
     }
@@ -313,7 +353,17 @@
       height: 40px;
       width: 400px;
     }
-
+    .display-save {
+      font-size: 90%;
+      color: black;
+      background-color: white;
+      padding: 0.2em;
+      margin: 0.2em;
+      font-family: monospace;
+      letter-spacing: 0.1em;
+      width: 600px;
+      height: 25px;
+    }
     .qgabutton-inactive {
       background-color: gray;
       color: white;
@@ -340,6 +390,21 @@
       cursor: pointer;
       height: 40px;
       width: 400px;
+
+    }
+    .qgabutton-save {
+      background-color: red;
+      color: white;
+      padding: 0px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 18px;
+      margin: 4px 2px;
+      cursor: pointer;
+      height: 40px;
+      width: 400px;
+
     }
 
   </style>
@@ -361,6 +426,10 @@
     <input class="display-mark"  type="text" id="mark_4" name="mark_4" placeholder="Mark 4"></br>
     <input class="display-module" type="text" id="module_5" name="module_5" placeholder="Module 5">
     <input class="display-mark"  type="text" id="mark_5" name="mark_5" placeholder="Mark 5">
+
+  </div>
+  <div>
+    <input class="display-save"  type="text" id="retrieve" name="retrieve" placeholder="retrieve by id">
   </div>
   <div>
         <textarea class="display-output" id="output-text" rows="5" cols="35" readonly=1 placeholder="Results here..." value="">
@@ -385,8 +454,12 @@
     <button class="qgabutton-active" onclick="getAverage();">Average Marks</button>
   </div>
   <div>
+    <button class="qgabutton-save" onclick="retrieveOperation();">Retrieve By ID</button>
+  </div>
+  <div>
     <button class="qgabutton-clear" onclick="clearText();">Clear</button>
   </div>
+
 
 </div>
 </body>

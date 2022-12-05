@@ -1,1 +1,1 @@
-{"version":1,"defects":{"Warning":6,"Test::testFailure":3,"Error":4,"Test::testSortedModules":3,"Test::testWithValidRequest":3},"times":{"Warning":0,"Test::testFailure":0,"Error":0,"Test::testSortedModules":0,"Test::testWithValidRequest":0.1}}
+{"version":1,"defects":{"Warning":6,"Test::testFailure":3,"Error":4,"Test::testSortedModules":3,"Test::testWithValidRequest":3},"times":{"Warning":0,"Test::testFailure":0,"Error":0,"Test::testSortedModules":0,"Test::testWithValidRequest":35.11}}

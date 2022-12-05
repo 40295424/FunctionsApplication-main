@@ -1,4 +1,4 @@
-package com.example.functions;
+package com.assignment.functions;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -112,28 +112,81 @@ class FunctionsApplicationTests {
         }
 
         @Test
-            public void AlphabeticSortTest () throws Exception {
-                {
-                    String module1 = "a1";
-                    String module2 = "a3";
-                    String module3 = "c2";
-                    String module4 = "c3";
-                    String module5 = "b2";
-                    Integer mark1 = 10;
-                    Integer mark2 = 10;
-                    Integer mark3 = 10;
-                    Integer mark4 = 10;
-                    Integer mark5 = 10;
-                    String endpoint = String.format("/AlphabeticalOrder?module_1=%s&module_2=%s&module_3=%s&module_4=%s&module_5=%s&mark_1=%d&mark_2=%d&mark_3=%d&mark_4=%d&mark_5=%d",
-                            module1, module2, module3, module4, module5, mark1, mark2, mark3, mark4, mark5);
-                    ResponseEntity<String> entity = restTemplate.getForEntity("http://localhost:" + this.port + endpoint, String.class);
-                    Assertions.assertEquals(HttpStatus.OK, entity.getStatusCode());
-                    List<String> expected = List.of("a1", "a3", "b2", "c2", "c3");
-                    ObjectMapper objectMapper = new ObjectMapper();
-                    List<String> actual = objectMapper.readValue(entity.getBody(),new TypeReference<List<String>>(){});
-                    Assertions.assertEquals(expected.toString(), actual.toString());
-                }
+        public void AlphabeticSortTest() throws Exception {
+            {
+                String module1 = "a1";
+                String module2 = "a3";
+                String module3 = "c2";
+                String module4 = "c3";
+                String module5 = "b2";
+                Integer mark1 = 10;
+                Integer mark2 = 10;
+                Integer mark3 = 10;
+                Integer mark4 = 10;
+                Integer mark5 = 10;
+                String endpoint = String.format("/AlphabeticalOrder?module_1=%s&module_2=%s&module_3=%s&module_4=%s&module_5=%s&mark_1=%d&mark_2=%d&mark_3=%d&mark_4=%d&mark_5=%d",
+                        module1, module2, module3, module4, module5, mark1, mark2, mark3, mark4, mark5);
+                ResponseEntity<String> entity = restTemplate.getForEntity("http://localhost:" + this.port + endpoint, String.class);
+                Assertions.assertEquals(HttpStatus.OK, entity.getStatusCode());
+                List<String> expected = List.of("a1", "a3", "b2", "c2", "c3");
+                ObjectMapper objectMapper = new ObjectMapper();
+                List<String> actual = objectMapper.readValue(entity.getBody(), new TypeReference<List<String>>() {
+                });
+                Assertions.assertEquals(expected.toString(), actual.toString());
+            }
 
+        }
+
+        @Test
+        public void MinMaxTest() throws Exception {
+            {
+                String module1 = "a1";
+                String module2 = "a3";
+                String module3 = "c2";
+                String module4 = "c3";
+                String module5 = "b2";
+                Integer mark1 = 10;
+                Integer mark2 = 10;
+                Integer mark3 = 10;
+                Integer mark4 = 10;
+                Integer mark5 = 10;
+                String endpoint = String.format("/minmax?module_1=%s&module_2=%s&module_3=%s&module_4=%s&module_5=%s&mark_1=%d&mark_2=%d&mark_3=%d&mark_4=%d&mark_5=%d",
+                        module1, module2, module3, module4, module5, mark1, mark2, mark3, mark4, mark5);
+                ResponseEntity<String> entity = restTemplate.getForEntity("http://localhost:" + this.port + endpoint, String.class);
+                Assertions.assertEquals(HttpStatus.OK, entity.getStatusCode());
+                String expected = ("Request ID: 1 Response: Highest scoring module = a1 - 10\n" +
+                        "Lowest scoring module = b2 - 10");
+                Assertions.assertEquals(expected, String.valueOf(entity.getBody()));
+            }
+
+        }
+
+        @Test
+        public void SortedModulesTest() throws Exception {
+            {
+                String module1 = "a1";
+                String module2 = "a3";
+                String module3 = "c2";
+                String module4 = "c3";
+                String module5 = "b2";
+                Integer mark1 = 10;
+                Integer mark2 = 10;
+                Integer mark3 = 10;
+                Integer mark4 = 10;
+                Integer mark5 = 10;
+                String endpoint = String.format("/sort?module_1=%s&module_2=%s&module_3=%s&module_4=%s&module_5=%s&mark_1=%d&mark_2=%d&mark_3=%d&mark_4=%d&mark_5=%d",
+                        module1, module2, module3, module4, module5, mark1, mark2, mark3, mark4, mark5);
+                ResponseEntity<String> entity = restTemplate.getForEntity("http://localhost:" + this.port + endpoint, String.class);
+                Assertions.assertEquals(HttpStatus.OK, entity.getStatusCode());
+                String expected = ("Request ID: 1 Response: \n" +
+                        "a1 - 10\n" +
+                        "a3 - 10\n" +
+                        "c2 - 10\n" +
+                        "c3 - 10\n" +
+                        "b2 - 10"
+                );
+                Assertions.assertEquals(expected, String.valueOf(entity.getBody()));
             }
         }
     }
+}
