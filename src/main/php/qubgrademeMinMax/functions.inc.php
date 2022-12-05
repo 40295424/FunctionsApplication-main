@@ -3,6 +3,7 @@
     function getMaxMin($modules, $marks)
     {
 
+
         $module_marks = array();
         for ($i = 0; $i < count($modules); $i++) {
 

@@ -33,21 +33,3 @@ require('functions.inc.php');
     $output['max_module'] = $max_min_modules[0];
     $output['min_module'] = $max_min_modules[1];
 
-    echo json_encode($output);
-if (empty($module_1) ) {
-    throw new Exception("Invalid module 1 input");
-}
-if (empty($module_2) ) {
-    throw new Exception("Invalid module 2 input");
-}
-if (empty($module_3) ) {
-    throw new Exception("Invalid module 3 input");
-}
-if (empty($module_4) ) {
-    throw new Exception("Invalid module 4 input");
-}
-if (empty($module_5) ) {
-    throw new Exception("Invalid module 4 input");
-}
-        exit();
-

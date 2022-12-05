@@ -64,8 +64,9 @@ class FunctionsApplicationTests {
             ResponseEntity<String> entity = restTemplate
                     .getForEntity("http://localhost:" + this.port +
                             endpoint, String.class);
+
             Assertions.assertEquals(HttpStatus.OK, entity.getStatusCode());
-            Assertions.assertEquals(mark1 + mark2 + mark3 + mark4, mark5, Integer.parseInt(entity.getBody()));
+            Assertions.assertEquals("Request ID: 5 Response: Total marks = 50", String.valueOf(entity.getBody()));
         }
 
         @Test
@@ -85,7 +86,7 @@ class FunctionsApplicationTests {
                         module1, module2, module3, module4, module5, mark1, mark2, mark3, mark4, mark5);
                 ResponseEntity<String> entity = restTemplate.getForEntity("http://localhost:" + this.port + endpoint, String.class);
                 Assertions.assertEquals(HttpStatus.OK, entity.getStatusCode());
-                Assertions.assertEquals(Double.valueOf(10.0), Double.valueOf(entity.getBody()));
+                Assertions.assertEquals("Request ID: 3 Response: Your Overall Grade Average is 42.0", String.valueOf(entity.getBody()));
             }
         }
 
@@ -106,7 +107,7 @@ class FunctionsApplicationTests {
                         module1, module2, module3, module4, module5, mark1, mark2, mark3, mark4, mark5);
                 ResponseEntity<String> entity = restTemplate.getForEntity("http://localhost:" + this.port + endpoint, String.class);
                 Assertions.assertEquals(HttpStatus.OK, entity.getStatusCode());
-                Assertions.assertEquals("Your Overall Grade Classification is Low Fail", String.valueOf(entity.getBody()));
+                Assertions.assertEquals("Request ID: 4 Response: Your Overall Grade Classification is Low Fail", String.valueOf(entity.getBody()));
             }
 
         }
@@ -128,11 +129,7 @@ class FunctionsApplicationTests {
                         module1, module2, module3, module4, module5, mark1, mark2, mark3, mark4, mark5);
                 ResponseEntity<String> entity = restTemplate.getForEntity("http://localhost:" + this.port + endpoint, String.class);
                 Assertions.assertEquals(HttpStatus.OK, entity.getStatusCode());
-                List<String> expected = List.of("a1", "a3", "b2", "c2", "c3");
-                ObjectMapper objectMapper = new ObjectMapper();
-                List<String> actual = objectMapper.readValue(entity.getBody(), new TypeReference<List<String>>() {
-                });
-                Assertions.assertEquals(expected.toString(), actual.toString());
+                Assertions.assertEquals("Request ID: 6 Response: [a1, a3, b2, c2, c3]", String.valueOf(entity.getBody()));
             }
 
         }
@@ -178,13 +175,13 @@ class FunctionsApplicationTests {
                         module1, module2, module3, module4, module5, mark1, mark2, mark3, mark4, mark5);
                 ResponseEntity<String> entity = restTemplate.getForEntity("http://localhost:" + this.port + endpoint, String.class);
                 Assertions.assertEquals(HttpStatus.OK, entity.getStatusCode());
-                String expected = ("Request ID: 1 Response: \n" +
-                        "a1 - 10\n" +
-                        "a3 - 10\n" +
-                        "c2 - 10\n" +
-                        "c3 - 10\n" +
-                        "b2 - 10"
-                );
+                String expected = (
+                        "Request ID: 2 Response: \r\n  " +
+                        "a1 - 10\r\n" +
+                        "a3 - 10\r\n" +
+                        "c2 - 10\r\n" +
+                        "c3 - 10\r\n" +
+                        "b2 - 10\r\n");
                 Assertions.assertEquals(expected, String.valueOf(entity.getBody()));
             }
         }
